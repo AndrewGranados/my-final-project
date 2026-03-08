@@ -11,3 +11,64 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Perfil {
+  id               Int              @id @default(autoincrement())
+  strNombrePerfil  String
+  bitAdministrador Boolean
+
+  usuarios         Usuario[]
+  permisos         PermisosPerfil[]
+}
+
+model Usuario {
+  id                Int     @id @default(autoincrement())
+  strNombreUsuario  String  @unique
+  strPwd            String
+  strCorreo         String  @unique
+  strNumeroCelular  String
+  idEstadoUsuario   Boolean
+  imagenUrl         String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  perfilId          Int
+  perfil            Perfil  @relation(fields: [perfilId], references: [id])
+}
+
+model Modulo {
+  id              Int              @id @default(autoincrement())
+  strNombreModulo String
+
+  permisos        PermisosPerfil[]
+  menus           Menu[]
+}
+
+model PermisosPerfil {
+  id           Int @id @default(autoincrement())
+
+  perfilId     Int
+  moduloId     Int
+
+  bitAgregar   Boolean
+  bitEditar    Boolean
+  bitConsulta  Boolean
+  bitEliminar  Boolean
+  bitDetalle   Boolean
+
+  perfil       Perfil @relation(fields: [perfilId], references: [id])
+  modulo       Modulo @relation(fields: [moduloId], references: [id])
+
+  @@unique([perfilId, moduloId])
+}
+
+model Menu {
+  id       Int @id @default(autoincrement())
+
+  idMenu   String
+  nombre   String
+  orden    Int
+
+  moduloId Int
+  modulo   Modulo @relation(fields: [moduloId], references: [id])
+}
