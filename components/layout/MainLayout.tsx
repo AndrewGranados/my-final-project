@@ -1,13 +1,23 @@
 "use client";
 
-import { Layout, Menu, Breadcrumb, Button, Drawer, Grid } from "antd";
+import {
+  MenuProps,
+  Layout,
+  Menu,
+  Breadcrumb,
+  Button,
+  Drawer,
+  Grid,
+} from "antd";
 import {
   SafetyOutlined,
   AppstoreOutlined,
   HomeOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+
 import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 const { Header, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -20,7 +30,21 @@ export default function MainLayout({
   const screens = useBreakpoint();
   const isMobile = !screens.md;
 
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
+
+  const routes: Record<string, string> = {
+    perfil: "/seguridad/perfil",
+    usuario: "/seguridad/usuario",
+    modulo: "/seguridad/modulo",
+    permisos: "/seguridad/permisos-perfil",
+    "p1-1": "/principal1/p1-1",
+    "p1-2": "/principal1/p1-2",
+    "p2-1": "/principal2/p2-1",
+    "p2-2": "/principal2/p2-2",
+  };
 
   const menuItems = [
     {
@@ -54,9 +78,40 @@ export default function MainLayout({
     },
   ];
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    const path = routes[e.key];
+    if (path) {
+      router.push(path);
+      setOpen(false);
+    }
+  };
+  const pathSegments = pathname.split("/").filter(Boolean);
+  
+  const breadcrumbItems = pathSegments.map((segment, index) => {
+    const url = "/" + pathSegments.slice(0, index + 1).join("/");
+
+    return {
+      title:
+        index === pathSegments.length - 1 ? (
+          segment
+        ) : (
+          <a onClick={() => router.push(url)}>
+            {segment.charAt(0).toUpperCase() + segment.slice(1)}
+          </a>
+        ),
+    };
+  });
+
+  breadcrumbItems.unshift({
+    title: (
+      <a onClick={() => router.push("/")}>
+        <HomeOutlined /> Inicio
+      </a>
+    ),
+  });
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      
       {/* HEADER */}
       <Header
         style={{
@@ -75,7 +130,8 @@ export default function MainLayout({
           <Menu
             mode="horizontal"
             items={menuItems}
-            style={{ flex: 1, marginLeft: 40 }}
+            style={{ flex: 1, marginLeft: 60 }}
+            onClick={handleMenuClick}
           />
         )}
 
@@ -96,11 +152,10 @@ export default function MainLayout({
         onClose={() => setOpen(false)}
         open={open}
       >
-        <Menu mode="inline" items={menuItems} />
+        <Menu mode="inline" items={menuItems} onClick={handleMenuClick} />
       </Drawer>
 
       <Content style={{ padding: "16px 24px" }}>
-        
         {/* BREADCRUMB */}
         <div
           style={{
@@ -111,19 +166,7 @@ export default function MainLayout({
             marginBottom: 16,
           }}
         >
-          <Breadcrumb
-            separator="›"
-            items={[
-              {
-                title: (
-                  <>
-                    <HomeOutlined /> Inicio
-                  </>
-                ),
-              },
-              { title: "Modulo" },
-            ]}
-          />
+          <Breadcrumb separator="›" items={breadcrumbItems} />
         </div>
 
         {/* CONTENIDO */}
