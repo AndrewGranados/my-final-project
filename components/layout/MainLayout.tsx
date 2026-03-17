@@ -104,7 +104,7 @@ export default function MainLayout({
 
   breadcrumbItems.unshift({
     title: (
-      <a onClick={() => router.push("/")}>
+      <a onClick={() => router.push("/dashboard")}>
         <HomeOutlined /> Inicio
       </a>
     ),
