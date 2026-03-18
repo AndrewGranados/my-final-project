@@ -14,6 +14,7 @@ import {
   AppstoreOutlined,
   HomeOutlined,
   MenuOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 
 import { useState } from "react";
@@ -85,8 +86,9 @@ export default function MainLayout({
       setOpen(false);
     }
   };
+
   const pathSegments = pathname.split("/").filter(Boolean);
-  
+
   const breadcrumbItems = pathSegments.map((segment, index) => {
     const url = "/" + pathSegments.slice(0, index + 1).join("/");
 
@@ -110,6 +112,14 @@ export default function MainLayout({
     ),
   });
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    window.location.href = "/login";
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {/* HEADER */}
@@ -127,12 +137,25 @@ export default function MainLayout({
 
         {/* MENÚ PARA PC */}
         {!isMobile && (
-          <Menu
-            mode="horizontal"
-            items={menuItems}
-            style={{ flex: 1, marginLeft: 60 }}
-            onClick={handleMenuClick}
-          />
+          <div
+            style={{ display: "flex", alignItems: "center", gap: 12, flex: 1 }}
+          >
+            <Menu
+              mode="horizontal"
+              items={menuItems}
+              style={{ flex: 1, marginLeft: 60 }}
+              onClick={handleMenuClick}
+            />
+
+            <Button
+              danger
+              icon={<LogoutOutlined />}
+              type="primary"
+              onClick={handleLogout}
+            >
+              Cerrar sesión
+            </Button>
+          </div>
         )}
 
         {/* BOTÓN PARA MÓVIL */}
@@ -142,7 +165,6 @@ export default function MainLayout({
             icon={<MenuOutlined />}
             onClick={() => setOpen(true)}
           />
-          
         )}
       </Header>
 
@@ -154,6 +176,18 @@ export default function MainLayout({
         open={open}
       >
         <Menu mode="inline" items={menuItems} onClick={handleMenuClick} />
+
+        <div style={{ marginTop: 20 }}>
+          <Button
+            danger
+            block
+            icon={<LogoutOutlined />}
+            type="primary"
+            onClick={handleLogout}
+          >
+            Cerrar sesión
+          </Button>
+        </div>
       </Drawer>
 
       <Content style={{ padding: "16px 24px" }}>
