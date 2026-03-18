@@ -59,12 +59,16 @@ export default function LoginPage() {
           <Form.Item
             name="usuario"
             label="Usuario"
-            rules={[{ required: true, message: "Ingresa tu usuario" }]}
+            rules={[
+              { required: true, message: "Ingresa tu usuario" },
+              { max: 20, message: "Máximo 20 caracteres" }
+            ]}
           >
             <Input
               size="large"
               prefix={<UserOutlined />}
               placeholder="Usuario"
+              maxLength={20}
             />
           </Form.Item>
 
