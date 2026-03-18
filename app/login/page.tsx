@@ -38,7 +38,7 @@ export default function LoginPage() {
         justifyContent: "center",
         alignItems: "center",
         background: "#fcfcfc",
-        //        background: "linear-gradient(135deg,#1f4037,#99f2c8)",
+        padding: "30px",
       }}
     >
       <Card
