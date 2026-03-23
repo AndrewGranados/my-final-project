@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+//ELIMINAR COOKIE
+//--CERRAR SESIÓN
 export async function POST() {
 
   const response = NextResponse.json({

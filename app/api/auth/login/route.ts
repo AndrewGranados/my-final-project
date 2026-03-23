@@ -69,6 +69,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/jwt";
 
+//POST PARA LOGUEARTE
 export async function POST(req: Request) {
   try {
     const { usuario, password } = await req.json();

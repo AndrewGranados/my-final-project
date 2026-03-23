@@ -34,7 +34,7 @@ model Usuario {
 model Modulo {
   id              Int              @id @default(autoincrement())
   strNombreModulo String
-
+  
   permisos        PermisosPerfil[]
   menus           Menu[]
 }
