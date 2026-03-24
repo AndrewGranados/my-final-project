@@ -124,13 +124,13 @@ export async function POST(req: Request) {
 
     response.cookies.set("token", token, {
       httpOnly: true,
-      secure: false, // cambiar a true en producción
+      secure: false,
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 8, // 8 horas
     });
     
-
+    
     return response;
 
   } catch (error) {

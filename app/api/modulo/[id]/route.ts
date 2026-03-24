@@ -121,17 +121,17 @@ export async function DELETE(
 
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
-// ✏️ EDITAR
+// EDITAR
 export async function PUT(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
-    const { id } = await context.params; // 🔥 FIX
+    const { id } = await context.params; 
     const body = await req.json();
 
     const actualizado = await prisma.modulo.update({
@@ -152,15 +152,15 @@ export async function PUT(
   }
 }
 
-// 🗑 ELIMINAR
+// ELIMINAR
 export async function DELETE(
   req: Request,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
-    const { id } = await context.params; // 🔥 FIX
+    const { id } = await context.params;
 
     await prisma.modulo.delete({
       where: { id: Number(id) },

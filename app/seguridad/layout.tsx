@@ -1,4 +1,5 @@
-import { requireAdmin } from "@/lib/auth";
+//import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export default async function SeguridadLayout({
   children,
@@ -6,7 +7,7 @@ export default async function SeguridadLayout({
   children: React.ReactNode;
 }) {
 
-  await requireAdmin();
+  await requireAuth();
 
   return <>{children}</>;
 }

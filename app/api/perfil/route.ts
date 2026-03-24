@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 // GET → listar
 export async function GET() {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const perfiles = await prisma.perfil.findMany({
       orderBy: { id: "asc" },
@@ -23,7 +23,7 @@ export async function GET() {
 // POST → crear
 export async function POST(req: Request) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const body = await req.json();
 

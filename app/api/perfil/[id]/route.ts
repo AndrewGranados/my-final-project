@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 // PUT
 export async function PUT(
@@ -8,7 +8,7 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const { id } = await context.params;
     const body = await req.json();
@@ -36,7 +36,7 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const { id } = await context.params;
 

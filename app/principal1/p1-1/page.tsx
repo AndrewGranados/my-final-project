@@ -1,4 +1,4 @@
-import MainLayout from "@/components/layout/MainLayout";
+import MainLayout from "@/components/layout/MainLayoutWrapper";
 
 export default function PrincipalUnoUnoPage() {
   return (

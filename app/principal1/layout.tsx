@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export default async function PrincipalUnoLayout({
   children,
@@ -6,7 +6,7 @@ export default async function PrincipalUnoLayout({
   children: React.ReactNode;
 }) {
 
-  await requireAdmin();
+  await requireAuth();
 
   return <>{children}</>;
 }

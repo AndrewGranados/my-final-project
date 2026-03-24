@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 // GET → obtener permisos por perfil
 export async function GET(req: Request) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const { searchParams } = new URL(req.url);
     const perfilId = Number(searchParams.get("perfilId"));
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const body = await req.json();
 

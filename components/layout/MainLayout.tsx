@@ -25,8 +25,10 @@ const { useBreakpoint } = Grid;
 
 export default function MainLayout({
   children,
+  permisos,
 }: {
   children: React.ReactNode;
+  permisos: string[];
 }) {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
@@ -35,6 +37,8 @@ export default function MainLayout({
   const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
+
+  console.log("Permisos", permisos);
 
   const routes: Record<string, string> = {
     perfil: "/seguridad/perfil",
@@ -47,6 +51,7 @@ export default function MainLayout({
     "p2-2": "/principal2/p2-2",
   };
 
+  /*
   const menuItems = [
     {
       key: "seguridad",
@@ -78,6 +83,41 @@ export default function MainLayout({
       ],
     },
   ];
+*/
+  const menuItems = [
+    {
+      key: "seguridad",
+      icon: <SafetyOutlined />,
+      label: "Seguridad",
+      children: [
+        permisos.includes("Perfil") && { key: "perfil", label: "Perfil" },
+        permisos.includes("Usuario") && { key: "usuario", label: "Usuario" },
+        permisos.includes("Módulo") && { key: "modulo", label: "Módulo" },
+        permisos.includes("Permisos Perfil") && {
+          key: "permisos",
+          label: "Permisos Perfil",
+        },
+      ].filter(Boolean),
+    },
+    {
+      key: "principal1",
+      icon: <AppstoreOutlined />,
+      label: "Principal 1",
+      children: [
+        { key: "p1-1", label: "Principal 1.1" },
+        { key: "p1-2", label: "Principal 1.2" },
+      ],
+    },
+    {
+      key: "principal2",
+      icon: <AppstoreOutlined />,
+      label: "Principal 2",
+      children: [
+        { key: "p2-1", label: "Principal 2.1" },
+        { key: "p2-2", label: "Principal 2.2" },
+      ],
+    },
+  ].filter((menu) => menu.children.length > 0);
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     const path = routes[e.key];

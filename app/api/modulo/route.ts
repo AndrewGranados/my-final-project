@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET() {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const modulos = await prisma.modulo.findMany({
       orderBy: { id: "asc" },
@@ -21,7 +21,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    await requireAdmin();
+    await requireAuth();
 
     const body = await req.json();
 
