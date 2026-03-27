@@ -1,12 +1,14 @@
 "use client";
 
-import { Table, Button, Input, Select, Radio, Row, Col, Space } from "antd";
+import { Table, Button, Popconfirm, Space, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import UsuarioModal from "./UsuarioModal";
+import { usePermissions } from "@/lib/usePermissions";
 
 export default function UsuarioPage() {
   const [usuarios, setUsuarios] = useState([]);
+  const [editing, setEditing] = useState<any>(null);
   const [filtros, setFiltros] = useState({
     usuario: "",
     perfil: "",
@@ -23,6 +25,23 @@ export default function UsuarioPage() {
   useEffect(() => {
     fetchUsuarios();
   }, []);
+
+  const permisos = usePermissions("Usuario");
+
+  const handleDelete = async (record: any) => {
+    try{
+      const res = await fetch(`/api/usuario/${record.id}`,{
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error();
+
+      message.success("Usuario eliminado");
+      fetchUsuarios();
+    } catch {
+      message.error("Error al eliminar");
+    }
+  }
 
   const columns = [
     {
@@ -46,6 +65,40 @@ export default function UsuarioPage() {
       title: "Estado Registro",
       render: () => "OK",
     },
+    ...(permisos?.bitEditar || permisos?.bitEliminar
+      ? [
+          {
+            title: "Acciones",
+            render: (_: any, record: any) => (
+              <Space>
+                {permisos?.bitEditar && (
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      setEditing(record);
+                      setOpen(true);
+                    }}
+                  >
+                    <EditOutlined/>
+                  </Button>
+                )}
+
+                {permisos?.bitEliminar && (
+                  <Popconfirm
+                    title="¿Eliminar usuario?"
+                    onConfirm={() => handleDelete(record)}
+                  >
+                    <Button danger type="link">
+                      <DeleteOutlined/>
+                    </Button>
+                  </Popconfirm>
+                )}
+              </Space>
+            ),
+          },
+        ]
+      : []),
+    /*
     {
       title: "Editar",
       render: () => <EditOutlined style={{ cursor: "pointer" }} />,
@@ -53,12 +106,14 @@ export default function UsuarioPage() {
     {
       title: "Eliminar",
       render: () => <DeleteOutlined style={{ cursor: "pointer" }} />,
-    },
+    },*/
+    
   ];
 
   return (
     <div>
       {/* FILTROS */}
+      {/* 
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
           <label>Usuario:</label>
@@ -87,18 +142,20 @@ export default function UsuarioPage() {
         </Col>
       </Row>
 
-      {/* RADIO */}
+      {/* RADIO }
       <Radio defaultChecked>Todos</Radio>
-
+*/}
       {/* BOTÓN CREAR */}
       <div style={{ margin: "16px 0" }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setOpen(true)}
-        >
-          Nuevo
-        </Button>
+        {permisos?.bitAgregar && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setOpen(true)}
+          >
+            Nuevo
+          </Button>
+        )}
       </div>
 
       {/* TABLA */}

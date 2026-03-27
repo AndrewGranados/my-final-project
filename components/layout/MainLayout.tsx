@@ -8,6 +8,7 @@ import {
   Button,
   Drawer,
   Grid,
+  Popconfirm,
 } from "antd";
 import {
   SafetyOutlined,
@@ -186,15 +187,16 @@ export default function MainLayout({
               style={{ flex: 1, marginLeft: 60 }}
               onClick={handleMenuClick}
             />
-
-            <Button
-              danger
-              icon={<LogoutOutlined />}
-              type="primary"
-              onClick={handleLogout}
+            <Popconfirm
+              title="¿Cerrar sesión?"
+              okText="Sí"
+              cancelText="No"
+              onConfirm={handleLogout}
             >
-              Cerrar sesión
-            </Button>
+              <Button danger icon={<LogoutOutlined />} type="primary">
+                Cerrar sesión
+              </Button>
+            </Popconfirm>
           </div>
         )}
 
@@ -218,15 +220,16 @@ export default function MainLayout({
         <Menu mode="inline" items={menuItems} onClick={handleMenuClick} />
 
         <div style={{ marginTop: 20 }}>
-          <Button
-            danger
-            block
-            icon={<LogoutOutlined />}
-            type="primary"
-            onClick={handleLogout}
-          >
-            Cerrar sesión
-          </Button>
+          <Popconfirm
+              title="¿Cerrar sesión?"
+              okText="Sí"
+              cancelText="No"
+              onConfirm={handleLogout}
+            >
+              <Button block danger icon={<LogoutOutlined />} type="primary">
+                Cerrar sesión
+              </Button>
+            </Popconfirm>
         </div>
       </Drawer>
 

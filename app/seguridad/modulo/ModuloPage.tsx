@@ -4,6 +4,7 @@
 import ModuloModal from "./ModuloModal";
 import { useEffect, useState } from "react";
 import { Table, Button, Space, Popconfirm, message } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 export default function ModuloPage() {
   const [open, setOpen] = useState(false);
@@ -48,7 +49,7 @@ export default function ModuloPage() {
               setOpen(true);
             }}
           >
-            Editar
+            <EditOutlined/>
           </Button>
 
           <Popconfirm
@@ -69,7 +70,7 @@ export default function ModuloPage() {
             }}
           >
             <Button danger type="link">
-              Eliminar
+              <DeleteOutlined/>
             </Button>
           </Popconfirm>
         </Space>

@@ -2,7 +2,7 @@
 
 //import MainLayout from "@/components/layout/MainLayout";
 import { Table, Button, Input, Select, Radio, Row, Col, Space, Popconfirm, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import PerfilModal from "./PerfilModal";
 
@@ -47,7 +47,7 @@ export default function PerfilPage() {
               setOpen(true);
             }}
           >
-            Editar
+            <EditOutlined/>
           </Button>
 
           <Popconfirm
@@ -68,7 +68,7 @@ export default function PerfilPage() {
             }}
           >
             <Button danger type="link">
-              Eliminar
+              <DeleteOutlined/>
             </Button>
           </Popconfirm>
         </Space>
@@ -79,6 +79,7 @@ export default function PerfilPage() {
   return (
     <div>
       {/* FILTROS */}
+      {/* 
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
           <label>Perfil:</label>
@@ -98,7 +99,7 @@ export default function PerfilPage() {
         </Col>
       </Row>
 
-      <Radio defaultChecked>Todos</Radio>
+      <Radio defaultChecked>Todos</Radio>*/}
 
       <div style={{ margin: "16px 0" }}>
         <Button
