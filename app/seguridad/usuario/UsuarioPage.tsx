@@ -22,6 +22,7 @@ import {
 import { useEffect, useState } from "react";
 import UsuarioModal from "./UsuarioModal";
 import { usePermissions } from "@/lib/usePermissions";
+//import NoAccess from "@/components/NoAccess";
 
 export default function UsuarioPage() {
   const [usuarios, setUsuarios] = useState([]);
@@ -46,6 +47,12 @@ export default function UsuarioPage() {
   }, []);
 
   const permisos = usePermissions("Usuario");
+
+  if (!permisos) return null;
+
+  /*if (!permisos.bitConsulta) {
+    return <NoAccess />;
+  }*/
 
   const handleDelete = async (record: any) => {
     try {
@@ -85,7 +92,9 @@ export default function UsuarioPage() {
           <Avatar src={record.imagenUrl} size={48}>
             {record.strNombreUsuario?.charAt(0)}
           </Avatar>
-          <Text strong style={{ fontSize: 14 }}>{record.strNombreUsuario} </Text>
+          <Text strong style={{ fontSize: 14 }}>
+            {record.strNombreUsuario}{" "}
+          </Text>
         </Space>
       ),
     },
@@ -229,7 +238,7 @@ export default function UsuarioPage() {
 
       <UsuarioModal
         open={open}
-        onClose={() => { 
+        onClose={() => {
           setOpen(false);
           setEditing(null);
         }}

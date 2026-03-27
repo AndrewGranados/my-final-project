@@ -1,4 +1,3 @@
-//import { requireAdmin } from "@/lib/auth";
 import { requireAuth } from "@/lib/auth";
 
 export default async function DashboardLayout({
@@ -6,7 +5,6 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   await requireAuth();
 
   return <>{children}</>;
