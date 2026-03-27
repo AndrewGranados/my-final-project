@@ -167,6 +167,7 @@ export default function PermisosPerfilPage() {
 
       {/* TABLA */}
       <Table
+        scroll={{x: true}}
         rowKey="moduloId"
         columns={columns}
         dataSource={permisos}

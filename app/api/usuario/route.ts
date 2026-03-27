@@ -13,27 +13,8 @@ export async function GET() {
   return NextResponse.json(usuarios);
 }
 
-//POST USUARIOS
-/*
-export async function POST(req: Request) {
-  const data = await req.json();
-
-  const hashedPassword = await bcrypt.hash(data.strPwd, 10);
-  
-  const user = await prisma.usuario.create({
-    data: {
-      strNombreUsuario: data.strNombreUsuario,
-      strPwd: hashedPassword,
-      strCorreo: data.strCorreo,
-      strNumeroCelular: data.strNumeroCelular,
-      idEstadoUsuario: true,
-      perfilId: data.perfilId,
-    },
-  });  
-}
-*/
-
 // POST USUARIOS
+/*
 export async function POST(req: Request) {
   try {
     const data = await req.json();
@@ -52,6 +33,33 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(user); 
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Error al crear usuario" },
+      { status: 500 }
+    );
+  }
+}
+*/
+export async function POST(req: Request) {
+  try {
+    const data = await req.json();
+
+    const hashedPassword = await bcrypt.hash(data.strPwd, 10);
+
+    const user = await prisma.usuario.create({
+      data: {
+        strNombreUsuario: data.strNombreUsuario,
+        strPwd: hashedPassword,
+        strCorreo: data.strCorreo,
+        strNumeroCelular: data.strNumeroCelular,
+        imagenUrl: data.imagenUrl || null,
+        idEstadoUsuario: true,
+        perfilId: data.perfilId,
+      },
+    });
+
+    return NextResponse.json(user);
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Error al crear usuario" },

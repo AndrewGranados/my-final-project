@@ -1,16 +1,37 @@
 "use client";
 
 //import MainLayout from "@/components/layout/MainLayout";
-import { Table, Button, Input, Select, Radio, Row, Col, Space, Popconfirm, message } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Button,
+  Input,
+  Select,
+  Radio,
+  Row,
+  Col,
+  Space,
+  Popconfirm,
+  message,
+} from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import PerfilModal from "./PerfilModal";
+import { usePermissions } from "@/lib/usePermissions";
 
 export default function PerfilPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any>(null);
-
   const [perfiles, setPerfiles] = useState([]);
+  const [searchPerfil, setSearchPerfil] = useState("");
+  const [estado, setEstado] = useState<string | null>(null);
+
+  const permisos = usePermissions("Perfil");
 
   const fetchPerfiles = async () => {
     const res = await fetch("/api/perfil");
@@ -22,6 +43,36 @@ export default function PerfilPage() {
   useEffect(() => {
     fetchPerfiles();
   }, []);
+
+  const filteredPerfiles = perfiles.filter((u: any) => {
+    const matchPerfil = u.strNombrePerfil
+      ?.toLowerCase()
+      .includes(searchPerfil.toLowerCase());
+
+    const matchEstado =
+      estado === null
+        ? true
+        : estado === "si"
+          ? u.bitAdministrador === true
+          : u.bitAdministrador === false;
+
+    return matchEstado && matchPerfil;
+  });
+
+  const handleDelete = async (record: any) => {
+    try {
+      const res = await fetch(`/api/perfil/${record.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error();
+
+      message.success("Perfil eliminado");
+      fetchPerfiles();
+    } catch {
+      message.error("Error al eliminar");
+    }
+  };
 
   const columns = [
     {
@@ -36,87 +87,102 @@ export default function PerfilPage() {
       title: "Super Admin",
       render: (r: any) => (r.bitAdministrador ? "Sí" : "No"),
     },
-    {
-      title: "Acciones",
-      render: (_: any, record: any) => (
-        <Space>
-          <Button
-            type="link"
-            onClick={() => {
-              setEditing(record);
-              setOpen(true);
-            }}
-          >
-            <EditOutlined/>
-          </Button>
+    ...(permisos?.bitEditar || permisos?.bitEliminar
+      ? [
+          {
+            title: "Acciones",
+            render: (_: any, record: any) => (
+              <Space>
+                {permisos?.bitEditar && (
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      setEditing(record);
+                      setOpen(true);
+                    }}
+                  >
+                    <EditOutlined />
+                  </Button>
+                )}
 
-          <Popconfirm
-            title="¿Eliminar perfil?"
-            onConfirm={async () => {
-              try {
-                const res = await fetch(`/api/perfil/${record.id}`, {
-                  method: "DELETE",
-                });
-
-                if (!res.ok) throw new Error();
-
-                message.success("Perfil eliminado");
-                fetchPerfiles();
-              } catch {
-                message.error("Error al eliminar");
-              }
-            }}
-          >
-            <Button danger type="link">
-              <DeleteOutlined/>
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
+                {permisos?.bitEliminar && (
+                  <Popconfirm
+                    title="¿Eliminar perfil?"
+                    onConfirm={() => handleDelete(record)}
+                  >
+                    <Button danger type="link">
+                      <DeleteOutlined />
+                    </Button>
+                  </Popconfirm>
+                )}
+              </Space>
+            ),
+          },
+        ]
+      : []),
   ];
+
+  if (!permisos) return null;
 
   return (
     <div>
       {/* FILTROS */}
-      {/* 
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={6}>
-          <label>Perfil:</label>
-          <Input />
-        </Col>
+      <div style={{ padding: 10, display: "flex", gap: 10 }}>
+        {/* 🔍 BUSCAR */}
+        <Input
+          placeholder="Buscar perfil..."
+          prefix={<SearchOutlined />}
+          value={searchPerfil}
+          onChange={(e) => setSearchPerfil(e.target.value)}
+          allowClear
+          style={{ width: 220 }}
+        />
 
-        <Col span={6}>
-          <label>Estado:</label>
-          <Select style={{ width: "100%" }} />
-        </Col>
+        {/* 📊 Super Admin */}
+        <Select
+          placeholder="Super Admin"
+          value={estado}
+          onChange={(value) => setEstado(value)}
+          allowClear
+          style={{ width: 160 }}
+          options={[
+            { label: "Super Admin", value: "si" },
+            { label: "No super admin", value: "no" },
+          ]}
+        />
 
-        <Col span={6} style={{ display: "flex", alignItems: "end" }}>
-          <Space>
-            <Button type="primary">Buscar</Button>
-            <Button>Limpiar</Button>
-          </Space>
-        </Col>
-      </Row>
-
-      <Radio defaultChecked>Todos</Radio>*/}
-
-      <div style={{ margin: "16px 0" }}>
+        {/* LIMPIAR */}
         <Button
-          type="primary"
-          icon={<PlusOutlined />}
           onClick={() => {
-            setEditing(null);
-            setOpen(true);
+            setSearchPerfil("");
+            setEstado(null);
           }}
         >
-          Nuevo
+          <CloseOutlined />
+          Limpiar
         </Button>
       </div>
 
+      <div style={{ margin: "16px 0" }}>
+        {permisos?.bitAgregar && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+          >
+            Nuevo
+          </Button>
+        )}
+      </div>
+
       <Table
+        scroll={{ x: true }}
         columns={columns}
-        dataSource={perfiles}
+        //dataSource={perfiles}
+        dataSource={filteredPerfiles}
         rowKey="id"
         pagination={{ pageSize: 5 }}
       />

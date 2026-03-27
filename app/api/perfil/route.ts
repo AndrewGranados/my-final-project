@@ -9,6 +9,9 @@ export async function GET() {
 
     const perfiles = await prisma.perfil.findMany({
       orderBy: { id: "asc" },
+      /*include:{
+        usuarios: true,
+      }*/
     });
 
     return NextResponse.json(perfiles);
