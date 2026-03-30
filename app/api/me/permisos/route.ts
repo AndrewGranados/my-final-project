@@ -14,7 +14,8 @@ export async function GET(req: Request) {
     where: { id: user.perfilId },
   });
 
-  // 🔥 admin = todo
+  // Validación de administrador
+  // admin -> todo
   if (perfil?.bitAdministrador) {
     return NextResponse.json({
       bitAgregar: true,
@@ -24,6 +25,7 @@ export async function GET(req: Request) {
     });
   }
 
+  //Consulta de permisos por módulo
   const permiso = await prisma.permisosPerfil.findFirst({
     where: {
       perfilId: user.perfilId,

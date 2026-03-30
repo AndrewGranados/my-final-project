@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth";
 
+// CONSULTAR
 export async function GET() {
   try {
     await requireAuth();
@@ -19,6 +20,7 @@ export async function GET() {
   }
 }
 
+// CREAR
 export async function POST(req: Request) {
   try {
     await requireAuth();
