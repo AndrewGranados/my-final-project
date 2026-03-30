@@ -186,7 +186,7 @@ export default function PrincipalUnoUnoPage() {
       )}
 
       {/* TABLA */}
-      <Table columns={columns} dataSource={filteredUsuarios} rowKey="id" />
+      <Table columns={columns} dataSource={filteredUsuarios} rowKey="id" style={{paddingBottom: 20}}/>
 
       {/* MODAL */}
       <UsuarioModal

@@ -1,9 +1,13 @@
+import { requirePermission } from "@/lib/permissions";
+import PrincipalDosDosPage from "./PrincipalDosDosPage";
 import MainLayout from "@/components/layout/MainLayoutWrapper";
 
-export default function PrincipalDosDosPage() {
+export default async function Page() {
+  await requirePermission("Usuario", "bitConsulta");
+
   return (
     <MainLayout>
-      <h1>Módulo Principal 2.2</h1>
+      <PrincipalDosDosPage />
     </MainLayout>
   );
 }
