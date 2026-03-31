@@ -52,39 +52,6 @@ export default function MainLayout({
     "p2-2": "/principal2/p2-2",
   };
 
-  /*
-  const menuItems = [
-    {
-      key: "seguridad",
-      icon: <SafetyOutlined />,
-      label: "Seguridad",
-      children: [
-        { key: "perfil", label: "Perfil" },
-        { key: "usuario", label: "Usuario" },
-        { key: "modulo", label: "Módulo" },
-        { key: "permisos", label: "Permisos Perfil" },
-      ],
-    },
-    {
-      key: "principal1",
-      icon: <AppstoreOutlined />,
-      label: "Principal 1",
-      children: [
-        { key: "p1-1", label: "Principal 1.1" },
-        { key: "p1-2", label: "Principal 1.2" },
-      ],
-    },
-    {
-      key: "principal2",
-      icon: <AppstoreOutlined />,
-      label: "Principal 2",
-      children: [
-        { key: "p2-1", label: "Principal 2.1" },
-        { key: "p2-2", label: "Principal 2.2" },
-      ],
-    },
-  ];
-*/
   const menuItems = [
     {
       key: "seguridad",
@@ -105,18 +72,30 @@ export default function MainLayout({
       icon: <AppstoreOutlined />,
       label: "Principal 1",
       children: [
-        { key: "p1-1", label: "Principal 1.1" },
-        { key: "p1-2", label: "Principal 1.2" },
-      ],
+        permisos.includes("Principal 1.1") && {
+          key: "p1-1",
+          label: "Principal 1.1",
+        },
+        permisos.includes("Principal 1.2") && {
+          key: "p1-2",
+          label: "Principal 1.2",
+        },
+      ].filter(Boolean),
     },
     {
       key: "principal2",
       icon: <AppstoreOutlined />,
       label: "Principal 2",
       children: [
-        { key: "p2-1", label: "Principal 2.1" },
-        { key: "p2-2", label: "Principal 2.2" },
-      ],
+        permisos.includes("Principal 2.1") && {
+          key: "p2-1",
+          label: "Principal 2.1",
+        },
+        permisos.includes("Principal 2.2") && {
+          key: "p2-2",
+          label: "Principal 2.2",
+        },
+      ].filter(Boolean),
     },
   ].filter((menu) => menu.children.length > 0);
 
@@ -221,15 +200,15 @@ export default function MainLayout({
 
         <div style={{ marginTop: 20 }}>
           <Popconfirm
-              title="¿Cerrar sesión?"
-              okText="Sí"
-              cancelText="No"
-              onConfirm={handleLogout}
-            >
-              <Button block danger icon={<LogoutOutlined />} type="primary">
-                Cerrar sesión
-              </Button>
-            </Popconfirm>
+            title="¿Cerrar sesión?"
+            okText="Sí"
+            cancelText="No"
+            onConfirm={handleLogout}
+          >
+            <Button block danger icon={<LogoutOutlined />} type="primary">
+              Cerrar sesión
+            </Button>
+          </Popconfirm>
         </div>
       </Drawer>
 
@@ -260,5 +239,5 @@ export default function MainLayout({
         </div>
       </Content>
     </Layout>
-  )
+  );
 }

@@ -7,5 +7,5 @@ export default async function DashboardLayout({
 }) {
   await requireAuth();
 
-  return <>{children}</>;
+  return <>{children}</>
 }

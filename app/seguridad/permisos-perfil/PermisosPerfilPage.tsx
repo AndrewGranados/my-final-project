@@ -60,9 +60,18 @@ export default function PermisosPerfilPage() {
   }, [perfilId, modulos]);
 
   // cambiar checkbox
+  /*
   const handleChange = (index: number, field: string, value: boolean) => {
     const newData = [...permisos];
     newData[index][field] = value;
+    setPermisos(newData);
+  };
+  */
+  const handleChange = (moduloId: number, field: string, value: boolean) => {
+    const newData = permisos.map((item) =>
+      item.moduloId === moduloId ? { ...item, [field]: value } : item,
+    );
+
     setPermisos(newData);
   };
 
@@ -95,55 +104,55 @@ export default function PermisosPerfilPage() {
     },
     {
       title: "Crear",
-      render: (_: any, record: any, index: number) => (
+      render: (_: any, record: any) => (
         <Checkbox
           checked={record.bitAgregar}
           onChange={(e) =>
-            handleChange(index, "bitAgregar", e.target.checked)
+            handleChange(record.moduloId, "bitAgregar", e.target.checked)
           }
         />
       ),
     },
     {
       title: "Editar",
-      render: (_: any, record: any, index: number) => (
+      render: (_: any, record: any) => (
         <Checkbox
           checked={record.bitEditar}
           onChange={(e) =>
-            handleChange(index, "bitEditar", e.target.checked)
+            handleChange(record.moduloId, "bitEditar", e.target.checked)
           }
         />
       ),
     },
     {
       title: "Ver",
-      render: (_: any, record: any, index: number) => (
+      render: (_: any, record: any) => (
         <Checkbox
           checked={record.bitConsulta}
           onChange={(e) =>
-            handleChange(index, "bitConsulta", e.target.checked)
+            handleChange(record.moduloId, "bitConsulta", e.target.checked)
           }
         />
       ),
     },
     {
       title: "Eliminar",
-      render: (_: any, record: any, index: number) => (
+      render: (_: any, record: any) => (
         <Checkbox
           checked={record.bitEliminar}
           onChange={(e) =>
-            handleChange(index, "bitEliminar", e.target.checked)
+            handleChange(record.moduloId, "bitEliminar", e.target.checked)
           }
         />
       ),
     },
     {
       title: "Detalle",
-      render: (_: any, record: any, index: number) => (
+      render: (_: any, record: any) => (
         <Checkbox
           checked={record.bitDetalle}
           onChange={(e) =>
-            handleChange(index, "bitDetalle", e.target.checked)
+            handleChange(record.moduloId, "bitDetalle", e.target.checked)
           }
         />
       ),
@@ -167,11 +176,11 @@ export default function PermisosPerfilPage() {
 
       {/* TABLA */}
       <Table
-        scroll={{x: true}}
+        scroll={{ x: true }}
         rowKey="moduloId"
         columns={columns}
         dataSource={permisos}
-        pagination={false}
+        pagination={{ pageSize: 4 }}
       />
 
       {/* BOTÓN */}

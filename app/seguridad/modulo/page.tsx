@@ -7,7 +7,7 @@ export default async function Page() {
 
   return (
     <MainLayout>
-      <ModuloPage />;
+      <ModuloPage />
     </MainLayout>
   );
 }

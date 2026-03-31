@@ -46,9 +46,10 @@ export default function PrincipalDosDosPage() {
     fetchUsuarios();
   }, []);
 
-  const permisos = usePermissions("Usuario");
-  if (!permisos) return null;
-
+//  const permisos = usePermissions("Usuario");
+  //if (!permisos) return null;
+  const permisosPrincipal = usePermissions("Principal 2.2");
+  
   const handleDelete = (record: any) => {
     message.success(`(Simulado) Usuario "${record.strNombreUsuario}" eliminado`);
   };
@@ -97,13 +98,13 @@ export default function PrincipalDosDosPage() {
       ),
     },
 
-    ...(permisos?.bitEditar || permisos?.bitEliminar
+    ...(permisosPrincipal?.bitEditar || permisosPrincipal?.bitEliminar
       ? [
           {
             title: "Acciones",
             render: (_: any, record: any) => (
               <Space>
-                {permisos?.bitEditar && (
+                {permisosPrincipal?.bitEditar && (
                   <Button
                     type="link"
                     onClick={() => {
@@ -115,7 +116,7 @@ export default function PrincipalDosDosPage() {
                   </Button>
                 )}
 
-                {permisos?.bitEliminar && (
+                {permisosPrincipal?.bitEliminar && (
                   <Popconfirm
                     title="¿Eliminar usuario?"
                     onConfirm={() => handleDelete(record)}
@@ -175,7 +176,7 @@ export default function PrincipalDosDosPage() {
       </div>
 
       {/* BOTÓN */}
-      {permisos?.bitAgregar && (
+      {permisosPrincipal?.bitAgregar && (
         <Button
           type="primary"
           icon={<PlusOutlined />}

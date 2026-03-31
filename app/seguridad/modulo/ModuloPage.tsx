@@ -147,6 +147,7 @@ export default function ModuloPage() {
             //dataSource={data}
             dataSource={filteredModulos}
             loading={loading}
+            pagination={{ pageSize: 4 }}
           />
         </div>
 

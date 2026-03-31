@@ -35,7 +35,7 @@ export default function PrincipalUnoUnoPage() {
   const [open, setOpen] = useState(false);
   const { Text } = Typography;
 
-  // ✅ puedes dejarlo o mockearlo después
+  // puedes dejarlo o mockearlo después
   const fetchUsuarios = async () => {
     const res = await fetch("/api/usuario");
     const data = await res.json();
@@ -46,11 +46,18 @@ export default function PrincipalUnoUnoPage() {
     fetchUsuarios();
   }, []);
 
-  const permisos = usePermissions("Usuario");
-  if (!permisos) return null;
+  //const permisosUsuario = usePermissions("Usuario");
+  const permisosPrincipal = usePermissions("Principal 1.1");
+
+  //if (!permisosPrincipal && !permisosUsuario) return null;
+  if (!permisosPrincipal.bitConsulta) {
+    return <div>No tienes permisos</div>
+  }
 
   const handleDelete = (record: any) => {
-    message.success(`(Simulado) Usuario "${record.strNombreUsuario}" eliminado`);
+    message.success(
+      `(Simulado) Usuario "${record.strNombreUsuario}" eliminado`,
+    );
   };
 
   const filteredUsuarios = usuarios.filter((u: any) => {
@@ -97,13 +104,13 @@ export default function PrincipalUnoUnoPage() {
       ),
     },
 
-    ...(permisos?.bitEditar || permisos?.bitEliminar
+    ...(permisosPrincipal?.bitEditar || permisosPrincipal?.bitEliminar
       ? [
           {
             title: "Acciones",
             render: (_: any, record: any) => (
               <Space>
-                {permisos?.bitEditar && (
+                {permisosPrincipal?.bitEditar && (
                   <Button
                     type="link"
                     onClick={() => {
@@ -115,7 +122,7 @@ export default function PrincipalUnoUnoPage() {
                   </Button>
                 )}
 
-                {permisos?.bitEliminar && (
+                {permisosPrincipal?.bitEliminar && (
                   <Popconfirm
                     title="¿Eliminar usuario?"
                     onConfirm={() => handleDelete(record)}
@@ -141,23 +148,23 @@ export default function PrincipalUnoUnoPage() {
           prefix={<SearchOutlined />}
           value={filtros.usuario}
           onChange={(e) => setFiltros({ ...filtros, usuario: e.target.value })}
-          style={{width:180}}
-          />
+          style={{ width: 180 }}
+        />
 
         <Input
           placeholder="Correo"
           prefix={<MailOutlined />}
           value={filtros.correo}
           onChange={(e) => setFiltros({ ...filtros, correo: e.target.value })}
-          style={{width:180}}
-          />
+          style={{ width: 180 }}
+        />
 
         <Input
           placeholder="Celular"
           prefix={<NumberOutlined />}
           value={filtros.celular}
           onChange={(e) => setFiltros({ ...filtros, celular: e.target.value })}
-          style={{width:180}}
+          style={{ width: 180 }}
         />
 
         <Button
@@ -175,7 +182,7 @@ export default function PrincipalUnoUnoPage() {
       </div>
 
       {/* BOTÓN */}
-      {permisos?.bitAgregar && (
+      {permisosPrincipal?.bitAgregar && (
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -186,7 +193,12 @@ export default function PrincipalUnoUnoPage() {
       )}
 
       {/* TABLA */}
-      <Table columns={columns} dataSource={filteredUsuarios} rowKey="id" style={{paddingBottom: 20}}/>
+      <Table
+        columns={columns}
+        dataSource={filteredUsuarios}
+        rowKey="id"
+        style={{ paddingBottom: 20 }}
+      />
 
       {/* MODAL */}
       <UsuarioModal
