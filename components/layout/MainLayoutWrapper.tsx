@@ -8,5 +8,5 @@ export default async function MainLayoutWrapper({
 }) {
   const permisos = await getUserPermissions();
 
-  return <MainLayout permisos={permisos}>{children}</MainLayout>;
+  return <MainLayout permisos={permisos}>{children}</MainLayout>
 }

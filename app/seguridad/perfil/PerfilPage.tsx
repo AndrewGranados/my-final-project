@@ -81,7 +81,16 @@ export default function PerfilPage() {
     },
     {
       title: "Estado",
-      render: () => "Activo",
+      render: (r: any) => (
+        <span
+          style={{
+            color: r.bitActivo ? "green" : "red",
+            fontWeight: "bold",
+          }}
+        >
+          {r.bitActivo ? "Activo" : "Inactivo"}
+        </span>
+      ),
     },
     {
       title: "Super Admin",

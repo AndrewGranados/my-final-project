@@ -260,5 +260,5 @@ export default function MainLayout({
         </div>
       </Content>
     </Layout>
-  );
+  )
 }

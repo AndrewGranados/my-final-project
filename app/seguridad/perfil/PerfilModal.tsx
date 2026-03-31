@@ -22,7 +22,10 @@ export default function PerfilModal({
 
   useEffect(() => {
     if (open) {
-      form.setFieldsValue(initialValues || { bitAdministrador: false });
+      form.setFieldsValue(initialValues || { 
+        bitAdministrador: false ,
+        bitActivo: true,
+      });
     }
   }, [open, initialValues]);
 
@@ -30,9 +33,7 @@ export default function PerfilModal({
     try {
       const values = await form.validateFields();
 
-      const url = isEdit
-        ? `/api/perfil/${initialValues.id}`
-        : "/api/perfil";
+      const url = isEdit ? `/api/perfil/${initialValues.id}` : "/api/perfil";
 
       const method = isEdit ? "PUT" : "POST";
 
@@ -82,11 +83,12 @@ export default function PerfilModal({
           <Input placeholder="Ej: Administrador" />
         </Form.Item>
 
-        <Form.Item
-          name="bitAdministrador"
-          valuePropName="checked"
-        >
+        <Form.Item name="bitAdministrador" valuePropName="checked">
           <Checkbox>Es administrador</Checkbox>
+        </Form.Item>
+
+        <Form.Item name="bitActivo" valuePropName="checked">
+          <Checkbox>Activo</Checkbox>
         </Form.Item>
       </Form>
     </Modal>

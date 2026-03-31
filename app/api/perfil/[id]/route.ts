@@ -18,6 +18,7 @@ export async function PUT(
       data: {
         strNombrePerfil: body.strNombrePerfil,
         bitAdministrador: body.bitAdministrador,
+        bitActivo: body.bitActivo,
       },
     });
 
