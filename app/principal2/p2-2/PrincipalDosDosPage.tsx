@@ -35,7 +35,7 @@ export default function PrincipalDosDosPage() {
   const [open, setOpen] = useState(false);
   const { Text } = Typography;
 
-  // ✅ puedes dejarlo o mockearlo después
+  // 🔥 Obtener usuarios (simulado o real)
   const fetchUsuarios = async () => {
     const res = await fetch("/api/usuario");
     const data = await res.json();
@@ -46,12 +46,27 @@ export default function PrincipalDosDosPage() {
     fetchUsuarios();
   }, []);
 
-//  const permisos = usePermissions("Usuario");
-  //if (!permisos) return null;
+  // 🔐 Permisos del módulo PRINCIPAL
   const permisosPrincipal = usePermissions("Principal 2.2");
-  
+
+  // 🧠 Esperar a que carguen permisos
+  if (!permisosPrincipal) {
+    return <div>Cargando permisos...</div>;
+  }
+
+  // 🚫 Sin permiso de consulta → no ve nada
+  if (!permisosPrincipal.bitConsulta) {
+    return <div>No tienes permisos</div>;
+  }
+
+  // 🔥 Helper PRO
+  const can = (perm: keyof typeof permisosPrincipal) =>
+    permisosPrincipal?.[perm];
+
   const handleDelete = (record: any) => {
-    message.success(`(Simulado) Usuario "${record.strNombreUsuario}" eliminado`);
+    message.success(
+      `(Simulado) Usuario "${record.strNombreUsuario}" eliminado`
+    );
   };
 
   const filteredUsuarios = usuarios.filter((u: any) => {
@@ -98,13 +113,14 @@ export default function PrincipalDosDosPage() {
       ),
     },
 
-    ...(permisosPrincipal?.bitEditar || permisosPrincipal?.bitEliminar
+    // 🔐 ACCIONES CONTROLADAS POR PERMISOS
+    ...(can("bitEditar") || can("bitEliminar")
       ? [
           {
             title: "Acciones",
             render: (_: any, record: any) => (
               <Space>
-                {permisosPrincipal?.bitEditar && (
+                {can("bitEditar") && (
                   <Button
                     type="link"
                     onClick={() => {
@@ -116,7 +132,7 @@ export default function PrincipalDosDosPage() {
                   </Button>
                 )}
 
-                {permisosPrincipal?.bitEliminar && (
+                {can("bitEliminar") && (
                   <Popconfirm
                     title="¿Eliminar usuario?"
                     onConfirm={() => handleDelete(record)}
@@ -141,24 +157,30 @@ export default function PrincipalDosDosPage() {
           placeholder="Usuario"
           prefix={<SearchOutlined />}
           value={filtros.usuario}
-          onChange={(e) => setFiltros({ ...filtros, usuario: e.target.value })}
-          style={{width:180}}
-          />
+          onChange={(e) =>
+            setFiltros({ ...filtros, usuario: e.target.value })
+          }
+          style={{ width: 180 }}
+        />
 
         <Input
           placeholder="Correo"
           prefix={<MailOutlined />}
           value={filtros.correo}
-          onChange={(e) => setFiltros({ ...filtros, correo: e.target.value })}
-          style={{width:180}}
-          />
+          onChange={(e) =>
+            setFiltros({ ...filtros, correo: e.target.value })
+          }
+          style={{ width: 180 }}
+        />
 
         <Input
           placeholder="Celular"
           prefix={<NumberOutlined />}
           value={filtros.celular}
-          onChange={(e) => setFiltros({ ...filtros, celular: e.target.value })}
-          style={{width:180}}
+          onChange={(e) =>
+            setFiltros({ ...filtros, celular: e.target.value })
+          }
+          style={{ width: 180 }}
         />
 
         <Button
@@ -175,8 +197,8 @@ export default function PrincipalDosDosPage() {
         </Button>
       </div>
 
-      {/* BOTÓN */}
-      {permisosPrincipal?.bitAgregar && (
+      {/* BOTÓN NUEVO */}
+      {can("bitAgregar") && (
         <Button
           type="primary"
           icon={<PlusOutlined />}
@@ -187,7 +209,12 @@ export default function PrincipalDosDosPage() {
       )}
 
       {/* TABLA */}
-      <Table columns={columns} dataSource={filteredUsuarios} rowKey="id" style={{paddingBottom: 20}}/>
+      <Table
+        columns={columns}
+        dataSource={filteredUsuarios}
+        rowKey="id"
+        style={{ paddingBottom: 20 }}
+      />
 
       {/* MODAL */}
       <UsuarioModal
