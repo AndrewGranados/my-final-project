@@ -3,7 +3,7 @@ import PrincipalDosDosPage from "./PrincipalDosDosPage";
 import MainLayout from "@/components/layout/MainLayoutWrapper";
 
 export default async function Page() {
-  await requirePermission("Usuario", "bitConsulta");
+  await requirePermission("Principal 2.2", "bitConsulta");
 
   return (
     <MainLayout>
