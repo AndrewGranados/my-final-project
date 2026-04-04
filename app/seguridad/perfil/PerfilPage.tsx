@@ -189,11 +189,11 @@ export default function PerfilPage() {
 
       <Table
         scroll={{ x: true }}
+        pagination={{ pageSize: 5 }}
         columns={columns}
         //dataSource={perfiles}
         dataSource={filteredPerfiles}
         rowKey="id"
-        pagination={{ pageSize: 5 }}
       />
 
       <PerfilModal

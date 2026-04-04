@@ -214,6 +214,8 @@ export default function PrincipalDosUnoPage() {
         dataSource={filteredUsuarios}
         rowKey="id"
         style={{ paddingBottom: 20 }}
+        scroll={{ x: true }}
+        pagination={{ pageSize: 5 }}
       />
 
       {/* MODAL */}
