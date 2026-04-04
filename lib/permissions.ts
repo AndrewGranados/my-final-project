@@ -4,7 +4,12 @@ import { cookies } from "next/headers";
 
 export async function requirePermission(
   moduloNombre: string,
-  accion: "bitAgregar" | "bitEditar" | "bitConsulta" | "bitEliminar" | "bitDetalle"
+  accion:
+    | "bitAgregar"
+    | "bitEditar"
+    | "bitConsulta"
+    | "bitEliminar"
+    | "bitDetalle",
 ) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -20,8 +25,15 @@ export async function requirePermission(
     where: { id: user.perfilId },
   });
 
+  if (!perfil) throw new Error("Perfil no encontrado");
+
+  // VALIDAR ACTIVO PRIMERO
+  if (!perfil.bitActivo) {
+    //throw new Error("Perfil_inactivo");
+  }
+
   // si es admin → acceso total
-  if (perfil?.bitAdministrador) return true;
+  if (perfil.bitAdministrador) return true;
 
   // buscar módulo
   const modulo = await prisma.modulo.findFirst({

@@ -35,6 +35,13 @@ export default function LoginPage() {
     const data = await res.json();
 
     if (!res.ok) {
+
+      // Detecta perfil inactivo
+      if(data.message === "Tu perfil está inactivo"){
+        //message.error("Tu perfil está inactivo");
+        //router.push("/components/PerfilInactivo.tsx");
+      }
+
       message.error(data.message);
       return;
     }

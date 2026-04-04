@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/jwt";
+import { message } from "antd";
 
 // 🔥 función para validar recaptcha
 async function verifyRecaptcha(token: string) {
@@ -19,12 +20,12 @@ async function verifyRecaptcha(token: string) {
   return res.json();
 }
 
-//POST PARA LOGUEARTE
+//POST para logueo
 export async function POST(req: Request) {
   try {
     const { usuario, password, recaptchaToken } = await req.json();
 
-    // 🔥 VALIDAR RECAPTCHA
+    // Validar recaptcha
     if (!recaptchaToken) {
       return NextResponse.json(
         { message: "Falta validar reCAPTCHA" },
@@ -63,6 +64,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { message: "Usuario inactivo" },
         { status: 403 }
+      );
+    }
+
+    //Validar el usuario activo
+    if(!user.perfil?.bitActivo){
+      return NextResponse.json(
+        {message: "Tu perfil está inactivo"},
+        {status: 403}
       );
     }
 
